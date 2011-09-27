@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:http://www.yodaspeak.co.uk/webservice/yodatalk">
+  <wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+		<xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+		<xsd:import namespace="http://schemas.xmlsoap.org/wsdl/"/>
+    <xsd:import namespace="http://www.yodaspeak.co.uk/webservice/yodatalk" />
+		<message name="http://www.yodaspeak.co.uk/webservice/yodaTalkRequest">
+			<xsd:element name="inputText" type="xsd:string"/>
+		</message>
+		<message name="yodaTalkResponse">
+      <xsd:element name="return" type="xsd:string"/>
+		</message>
+		<portType name="http://www.yodaspeak.co.uk/webservice/yodatalkPortType">
+			<operation name="yodaTalk">
+				<documentation>
+					Pass any string and it will be returned as Yoda-Speak.
+				</documentation>
+				<input message="tns:yodaTalkRequest"/>
+				<output message="tns:yodaTalkResponse"/>
+			</operation>
+		</portType>
+		<binding name="http://www.yodaspeak.co.uk/webservice/yodatalkBinding" type="tns:http://www.yodaspeak.co.uk/webservice/yodatalkPortType">
+			<soap:binding style="rpc" xmlns:soap="http://www.w3.org/2001/12/soap-envelope" transport="http://schemas.xmlsoap.org/soap/http"/>
+			<operation name="yodaTalk">
+				<soap:operation xmlns:soap="http://www.w3.org/2001/12/soap-envelope" soapAction="uri:http://www.yodaspeak.co.uk/webservice/yodatalk#yodaTalk" style="rpc"/>
+				<input>
+					<soap:body xmlns:soap="http://www.w3.org/2001/12/soap-envelope" use="literal" namespace="uri:http://www.yodaspeak.co.uk/webservice/yodatalk"/>
+				</input>
+				<output>
+					<soap:body xmlns:soap="http://www.w3.org/2001/12/soap-envelope" use="literal" namespace="uri:http://www.yodaspeak.co.uk/webservice/yodatalk"/>
+				</output>
+			</operation>
+		</binding>
+		<service name="http://www.yodaspeak.co.uk/webservice/yodatalk">
+			<port name="http://www.yodaspeak.co.uk/webservice/yodatalkPort" binding="tns:http://www.yodaspeak.co.uk/webservice/yodatalkBinding">
+				<soap:address xmlns:soap="http://www.w3.org/2001/12/soap-envelope" location="http://www.yodaspeak.co.uk/webservice/yodatalk.php"/>
+			</port>
+		</service>
+  </wsdl:definitions>
+</xsd:schema>
