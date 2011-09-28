@@ -50,6 +50,13 @@ namespace robokins
                     response = robokinsbot ? "Deactivating robokins' ! trigger" : "Activating robokins' ! trigger";
                     notify = true;
                     break;
+				case "toggleahk4me":
+					HTTP.useahk4me = HTTP.useahk4me ? false : true;
+					response = HTTP.useahk4me 
+							 ? "Future links will be in http://ahk4.me format" 
+							 : "Future links will be in the http://bit.ly format";
+					notify = true;
+					break;
                 case "quit":
                 case "die":
                     if (auth)
@@ -120,6 +127,10 @@ namespace robokins
 
                 #region Messages
 
+				case "version":
+					response = string.Format("Hmmm... Version 0.5, am I.");
+					break;
+				
                 case "status":
                 case "stats":
                 case "stat":
@@ -133,7 +144,7 @@ namespace robokins
                 case "hey":
                 case "sup":
                 case "hi":
-                    response = string.Format("'Lo. I'm a helper bot for #{0}.", Channel);
+                    response = string.Format("'Lo. I'm a helper bot for {0}.", Channel);
                     break;
 
                 case "pastebin":
@@ -379,6 +390,21 @@ namespace robokins
                         response = defs[0];
                     break;
 
+				
+				case "wa":
+				case "wolfram":
+					if (command[2].Length == 0) {
+						response = "This site you may find wolframalpha at.  " 
+								 + WolframAlpha.SiteUrl 
+								 + "  Herh herh herh.";
+					}
+					else {
+						response = string.Format("If you learn about {0} want to, learn about {0}, you will.  Yeesssssss.  {1}" 
+								 , command[2]
+					             , WolframAlpha.Link(command[2]));
+					}
+					break;
+				
                 case "search":
                 case "find":
                 case "query":
@@ -387,9 +413,10 @@ namespace robokins
                 case "ab":
                     search = true;
                     goto default;
+				
                 default:
                     def = (search ? command[1] : message.Text).Trim().ToLowerInvariant();
-                    if (def.Length < 2)
+                    if (def.Length < 2) 
                         break;
 
                     const int min = 2;
