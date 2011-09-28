@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Security;
+using System.Collections.Generic;
 
 namespace robokins
 {
@@ -8,8 +9,12 @@ namespace robokins
     {
         public static void Main()
         {
-            const string conf = "robokins.conf";
+            const string confFileName = "robokins.conf";
 
+			if (!File.Exists(confFileName))
+                throw new FileNotFoundException("Configuration file not found.", confFileName);
+            var conf = ConfRead(new StreamReader(confFileName));
+			
             string usernm = "";
             var passwd = new SecureString();
             string chanls = "";
@@ -28,12 +33,9 @@ namespace robokins
             bot.Start();
         }
 
-        private static string GetKeyValue(string confFileName, string Key)
+        private static string GetKeyValue(Dictionary<string, string> table, string Key)
         {
             string Value = "";
-            if (!File.Exists(confFileName))
-                throw new FileNotFoundException("Configuration file not found.", confFileName);
-            var table = ConfRead(new StreamReader(confFileName));
             if (table.ContainsKey(Key) && !string.IsNullOrEmpty(table[Key]))
             {
                 Value = table[Key];
@@ -43,12 +45,9 @@ namespace robokins
                 throw new ArgumentNullException("Key '" + Key + "' is blank.");
             return Value;
         }
-        private static int GetKeyIntValue(string confFileName, string Key)
+        private static int GetKeyIntValue(Dictionary<string, string> table, string Key)
         {
             String Value = "";
-            if (!File.Exists(confFileName))
-                throw new FileNotFoundException("Configuration file not found.", confFileName);
-            var table = ConfRead(new StreamReader(confFileName));
             if (table.ContainsKey(Key) && !string.IsNullOrEmpty(table[Key]))
             {
                 Value = table[Key];
@@ -59,12 +58,9 @@ namespace robokins
 
             return Convert.ToInt32(Value);
         }
-        private static SecureString GetKeySecureValue(string confFileName, string Key)
+        private static SecureString GetKeySecureValue(Dictionary<string, string> table, string Key)
         {
             var Value = new SecureString();
-            if (!File.Exists(confFileName))
-                throw new FileNotFoundException("Configuration file not found.", confFileName);
-            var table = ConfRead(new StreamReader(confFileName));
             if (table.ContainsKey(Key) && !string.IsNullOrEmpty(table[Key]))
             {
                 foreach (char letter in table[Key])
