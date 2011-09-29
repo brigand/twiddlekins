@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Text;
 using robokins.IRC;
 using robokins.Utility;
+using robokins.Trigger;
 
 namespace robokins
 {
@@ -14,16 +15,18 @@ namespace robokins
 
             if (!Invoke(message))
                 return false;
-
-            bool notify = false;
-            bool action = false;
-            bool auth = Operators.IndexOf(string.Concat(Delimiter, message.User.Host, Delimiter)) != -1;
-            bool search = false;
-
-            string[] command = Utility.Texts.Commands(message.Text);
-            string response = string.Empty;
-            string def;
-            string[] defs;
+			
+			TriggerResponse response = new TriggerResponse();
+			
+            response.Notify = false;
+            response.Action = false;
+            message.HasAuth = Operators.IndexOf(string.Concat(Delimiter, message.User.Host, Delimiter)) != -1;
+            response.Search = false;
+            response.Message = string.Empty;
+            
+			string[] command = Utility.Texts.Commands(message.Text);
+//            string def;
+//            string[] defs;
             String Nick;
             if (!string.IsNullOrEmpty(command[2])) {
                 int SpaceIndex = -1;
@@ -41,7 +44,7 @@ namespace robokins
                 Nick = "";
 
             #endregion
-
+			/*
             switch (command[0].Trim().ToLowerInvariant())
             {
                 #region Operator functions
@@ -52,7 +55,7 @@ namespace robokins
                     break;
 				case "toggleahk4me":
 					HTTP.useahk4me = HTTP.useahk4me ? false : true;
-					response = HTTP.useahk4me 
+					response = HTTP.useahk4me
 							 ? "Future links will be in http://ahk4.me format" 
 							 : "Future links will be in the http://bit.ly format";
 					notify = true;
@@ -453,23 +456,23 @@ namespace robokins
 //                    break;
                 #endregion
             }
-
+			 */
             #region Message
-
+			
             if (message.Target == Username)
-                notify = true;
+                response.Notify = true;
 
-            if (notify)
+            if (response.Notify)
                 message.Target = message.User.Nick;
 
             if (message.Target[0] != '#')
-                notify = true;
+                response.Notify = true;
 
-            if (action && !notify) // since /me doesn't work in notice
-                response = Action(response);
+            if (response.Action && !response.Notify) // since /me doesn't work in notice
+                response.Message = Action(response.Message);
 
-            if (response.Length != 0)
-                Message(message.Target, response, notify);
+            if (response.Message.Length != 0)
+                Message(message.Target, response.Message, response.Notify);
 
             return true;
 
