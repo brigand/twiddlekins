@@ -7,9 +7,13 @@ namespace robokins
 {
     partial class Program
     {
-        public static void Main()
+        public static void Main(string[] argv)
         {
-            const string confFileName = "robokins.conf";
+            string confFileName = "robokins.conf";
+			foreach (string arg in argv)
+			{
+				if (arg.EndsWith(".conf")) confFileName = arg;
+			}
 
 			if (!File.Exists(confFileName))
                 throw new FileNotFoundException("Configuration file not found.", confFileName);
