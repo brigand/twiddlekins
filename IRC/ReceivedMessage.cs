@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using robokins;
 
 namespace robokins.IRC
 {
@@ -9,6 +10,7 @@ namespace robokins.IRC
         User user;
         string target;
         string text;
+		bool auth;
 
         const string privmsgTxt = "PRIVMSG";
         const string noticeTxt = "NOTICE";
@@ -46,10 +48,17 @@ namespace robokins.IRC
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
+			
             target = values[2];
         }
-
+		
+		public bool HasAuth
+		{
+			get { return auth; }
+			
+			set { auth = value; }
+		}
+		
         public bool Notice
         {
             get { return notice; }
