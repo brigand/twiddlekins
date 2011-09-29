@@ -90,7 +90,6 @@
     <Compile Include="Tests.cs" />
     <Compile Include="Trigger.cs" />
     <Compile Include="IRC\User.cs" />
-    <Compile Include="TriggerAction.cs" />
     <Compile Include="Utility\EightBall.cs" />
     <Compile Include="Utility\Font.cs" />
     <Compile Include="Utility\HTTP.cs" />
@@ -105,6 +104,9 @@
     <Compile Include="Utility\Time.cs" />
     <Compile Include="Utility\Yodish.cs" />
     <Compile Include="Utility\WolframAlpha.cs" />
+    <Compile Include="Trigger\Defaults.cs" />
+    <Compile Include="Trigger\TriggerAction.cs" />
+    <Compile Include="Trigger\TriggerResponse.cs" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>
@@ -144,5 +146,8 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Trigger\" />
   </ItemGroup>
 </Project>
