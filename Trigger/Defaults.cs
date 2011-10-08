@@ -20,10 +20,28 @@ namespace robokins.Trigger
 		/// <returns>
 		/// Always true.
 		/// </returns>
-		bool HandlePageSearch(ReceivedMessage msg, TriggerResponse resp)
+		static bool HandlePageSearch(TriggerAction act, ReceivedMessage msg, ref TriggerResponse resp)
 		{
+			string uri = Format(msg, act.searchUri);
+			string data = HTTP.DownloadPage(uri);
+			string match = Texts.StringBetween(data, act.startsWith, act.endsWith);
 			
-			return true;	
+			if (match == null)
+			{
+				// Can later be changed to a user specified fail message or
+				// setting act.Respond to false.
+				resp.Message = String.Format(act.ReturnFormat, "no match");
+				
+				// we return false so another lower priority function can still
+				// try to use the input
+				return false;
+			}
+			else
+			{
+				resp.Message = String.Format(act.ReturnFormat, match);
+			}
+			
+			return true;
 		}
 		
 		/// <summary>
@@ -39,8 +57,10 @@ namespace robokins.Trigger
 		/// <returns>
 		/// A <see cref="System.String"/>
 		/// </returns>
-		private string Format(ReceivedMessage msg, string pattern)
+		protected static string Format(ReceivedMessage msg, string pattern)
 		{
+			Console.WriteLine("In Format():");
+			
 			char[] SPACE = {' '};
 			string[] request = msg.Text.Split(SPACE, 2, StringSplitOptions.RemoveEmptyEntries);
 			string[] requestWords = request[1].Split(SPACE, StringSplitOptions.RemoveEmptyEntries);
@@ -50,14 +70,18 @@ namespace robokins.Trigger
 				.Replace("{nick}", msg.User.Nick)
 				.Replace("{ident}", msg.User.Ident);
 			
+			Console.WriteLine("customized: {0}", customized);
+			
 			if (requestWords.Length > 0)
 			{
 				int lastIndex = requestWords.Length - 1;
 				customized = customized.Replace("{last}", requestWords[lastIndex]);
+				Console.WriteLine("Length > 0");
 			}
 			
 			try {
 				string formatted = string.Format(customized, requestWords);
+				Console.WriteLine("End Format() Clean:");
 				return formatted;
 			}
 			
